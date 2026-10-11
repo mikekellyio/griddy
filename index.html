@@ -80,6 +80,15 @@
   .desk svg { margin: auto; background: #fff; box-shadow: 0 1px 2px rgba(20,30,40,.18), 0 6px 18px rgba(20,30,40,.10); max-width: none; display: block; }
   .meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; color: var(--muted); font-size: 0.85rem; }
   .status { min-height: 1.2em; font-size: 0.85rem; color: var(--muted); margin-top: 10px; }
+  @page { margin: 10mm; }
+  @media print {
+    :root { padding: 0 !important; }
+    html, body { background: #fff !important; margin: 0; }
+    aside, .meta { display: none !important; }
+    .wrap { display: block; padding: 0; max-width: none; }
+    .desk { background: none; border: 0; padding: 0; overflow: visible; max-height: none; min-height: 0; display: block; }
+    .desk svg { box-shadow: none; margin: 0 auto; width: 100%; height: auto; max-height: 270mm; page-break-inside: avoid; break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -125,6 +134,7 @@
     <div class="actions">
       <button class="primary" id="saveBtn" type="button">Download SVG</button>
       <button id="copyBtn" type="button">Copy SVG code</button>
+      <button id="printBtn" type="button">Print</button>
     </div>
     <div class="status" id="status" role="status"></div>
   </aside>
@@ -308,6 +318,12 @@
       catch (_) { status('Copy failed. Select the preview and save it from your browser.'); }
       ta.remove();
     }
+  });
+
+  $('printBtn').addEventListener('click', () => {
+    status('Opening the print dialog\u2026');
+    try { window.print(); } catch (e) { /* handled below */ }
+    setTimeout(() => status(''), 1500);
   });
 
   render();
